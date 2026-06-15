@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>HistMaroc 🇲🇦</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    <!-- Leaflet CSS pour la carte -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="MarHist" class="logo">
+    {% if user %}
+    <div class="nav-bar">
+        <form action="{{ url_for('main.profile') }}" method="get" style="margin:0;padding:0;">
+            <button class="profile-icon-btn" title="Profil">
+                <span class="profile-icon">
+                    {{ user.name[0]|upper }}
+                </span>
+            </button>
+        </form>
+        <a href="{{ url_for('main.logout') }}" class="logout-btn">Déconnexion</a>
+    </div>
+    {% endif %}
+
+    <!-- HERO VIDEO / DIAPORAMA -->
+    <section class="hero-video">
+        <video 
+            id="heroVideo"
+            src="{{ url_for('static', filename='intro.mp4') }}"
+            poster="{{ url_for('static', filename='video_poster.jpg') }}"
+            autoplay
+            muted
+            playsinline
+            style="width:100%; height:100%; object-fit:cover; border-radius:18px;"
+        ></video>
+    </section>
+
+    <!-- TIMELINE HISTORIQUE -->
+    <section class="timeline-container">
+      <h2 class="timeline-title">L’Histoire du Maroc en 4 grandes périodes</h2>
+      <div class="timeline">
+        <div class="timeline-step" tabindex="0">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">Période Coloniale</div>
+          <div class="timeline-tooltip">
+            1912–1956 : Protectorat français et espagnol, résistances, bouleversements sociaux et politiques.
+          </div>
+        </div>
+        <div class="timeline-step" tabindex="0">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">Indépendance</div>
+          <div class="timeline-tooltip">
+            1956 : Fin du protectorat, retour de Mohammed V, construction de l’État moderne.
+          </div>
+        </div>
+        <div class="timeline-step" tabindex="0">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">Règne de Hassan II</div>
+          <div class="timeline-tooltip">
+            1961–1999 : Modernisation, réformes, “années de plomb”, Marche Verte.
+          </div>
+        </div>
+        <div class="timeline-step" tabindex="0">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">Réformes Récentes</div>
+          <div class="timeline-tooltip">
+            Depuis 1999 : Constitution 2011, Printemps arabe, droits des femmes, nouveau modèle de développement.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLIPCARDS CITATIONS -->
+    <section class="citations-flipcards">
+      <h2 class="flipcards-title">Découvrez l’Histoire du Maroc en Citations</h2>
+      <div class="flipcards-grid">
+
+        <!-- 1. Mohammed V, période coloniale -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Mohammed V</div>
+              <div class="flipcard-period">Période Coloniale</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Nous préférons mourir dignement pour la liberté que de vivre dans l’humiliation de l’oppression. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 2. Allal El Fassi -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Allal El Fassi</div>
+              <div class="flipcard-period">Période Coloniale</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« L’indépendance n’est pas une faveur à recevoir mais un droit à reconquérir. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 3. Mohammed V, retour de l'exil -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Mohammed V</div>
+              <div class="flipcard-period">Indépendance</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Nous sommes revenus parmi les nôtres, libres et indépendants. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 4. Abdelkrim El Khattabi -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Abdelkrim El Khattabi</div>
+              <div class="flipcard-period">Période Coloniale</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Je préfère mourir debout que de vivre à genoux. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 5. Manifeste de l’Indépendance (signataires) -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Signataires du Manifeste</div>
+              <div class="flipcard-period">Indépendance</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Nous, soussignés, proclamons solennellement l’indépendance totale du Maroc. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 6. Hassan II, modernisation -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Hassan II</div>
+              <div class="flipcard-period">Règne de Hassan II</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Un pays sans passé est un pays sans avenir. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 7. Discours de la Marche Verte, Hassan II -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Hassan II</div>
+              <div class="flipcard-period">Marche Verte (1975)</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Mon peuple, prépare-toi pour la marche vers le Sahara ! »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 8. Hassan II, sur la raison -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Hassan II</div>
+              <div class="flipcard-period">Règne de Hassan II</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« L’intelligence doit toujours l’emporter sur la force. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 9. Mohammed VI, société -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Mohammed VI</div>
+              <div class="flipcard-period">Réformes Récentes</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« La femme marocaine a aujourd’hui conquis sa place dans la société. »</div>
+            </div>
+          </div>
+        </button>
+
+        <!-- 10. Mohammed VI, développement -->
+        <button class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="flipcard-person">Mohammed VI</div>
+              <div class="flipcard-period">Réformes Récentes</div>
+            </div>
+            <div class="flip-card-back">
+              <div class="flipcard-quote">« Notre devoir est de poursuivre le développement et la modernisation du Maroc. »</div>
+            </div>
+          </div>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- CARTE INTERACTIVE -->
+    <section class="map-section">
+      <h2 class="map-title">Carte interactive de l’Histoire du Maroc</h2>
+      <div id="map"></div>
+    </section>
+
+    <div class="main-container">
+        <h1>Bienvenue {{ user.name }} !</h1>
+        <p>Tu peux maintenant discuter avec notre chatbot et explorer l'histoire du Maroc.</p>
+        <a href="{{ url_for('main.chatbot') }}" class="btn orange">Lancer le chatbot</a>
+    </div>
+
+    <!-- Leaflet JS pour la carte -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      var map = L.map('map').setView([31.6, -7.99], 6.2);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      // 10 événements historiques du Maroc avec position et info
+      var events = [
+        {
+          name: "Traité de Fès (1912)",
+          period: "Période Coloniale",
+          coord: [34.03, -5.01],
+          desc: "Signature du traité de protectorat français."
+        },
+        {
+          name: "Révolte du Rif (1921–1926)",
+          period: "Période Coloniale",
+          coord: [35.16, -3.04],
+          desc: "Soulèvement dirigé par Abdelkrim El Khattabi."
+        },
+        {
+          name: "Exil de Mohammed V (1953)",
+          period: "Période Coloniale",
+          coord: [33.6, -7.6],
+          desc: "Départ du roi pour l’exil, Casablanca."
+        },
+        {
+          name: "Retour de Mohammed V (1955)",
+          period: "Indépendance",
+          coord: [34.03, -6.83],
+          desc: "Retour triomphal à Rabat."
+        },
+        {
+          name: "Manifeste de l’Indépendance (1944)",
+          period: "Indépendance",
+          coord: [34.02, -6.84],
+          desc: "Déclaration officielle pour l’indépendance à Rabat."
+        },
+        {
+          name: "Marche Verte (1975)",
+          period: "Règne de Hassan II",
+          coord: [27.15, -13.2],
+          desc: "Départ de la Marche Verte vers le Sahara."
+        },
+        {
+          name: "Discours de la Marche Verte",
+          period: "Règne de Hassan II",
+          coord: [32.29, -9.23],
+          desc: "Appel à la nation, place publique d’Agadir."
+        },
+        {
+          name: "Constitution 2011",
+          period: "Réformes Récentes",
+          coord: [33.6, -7.6],
+          desc: "Adoption de la nouvelle Constitution à Casablanca."
+        },
+        {
+          name: "Printemps Arabe (2011)",
+          period: "Réformes Récentes",
+          coord: [34.26, -6.58],
+          desc: "Mouvement citoyen à Rabat."
+        },
+        {
+          name: "Réformes du Code de la famille (Moudawana, 2004)",
+          period: "Réformes Récentes",
+          coord: [32.88, -6.91],
+          desc: "Annonce des réformes à Khouribga."
+        }
+      ];
+
+      events.forEach(function(evt) {
+        L.marker(evt.coord)
+         .addTo(map)
+         .bindPopup("<b>" + evt.name + "</b><br><em>" + evt.period + "</em><br>" + evt.desc);
+      });
+    </script>
+</body>
+</html>

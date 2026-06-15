@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Inscription | MarHist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="MarHist" class="logo">
+    <div class="panel">
+        <a href="/" class="back-arrow">&#8592;</a>
+        <h2>Inscription</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, msg in messages %}
+              <div class="flash {{category}}">{{msg}}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <form method="POST" action="/signup">
+            <input type="text" name="name" placeholder="Nom complet" required />
+            <input type="text" name="username" placeholder="Nom d'utilisateur" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Mot de passe" required />
+            <select name="gender" required>
+                <option value="">Genre</option>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+            </select>
+            <button type="submit" class="btn orange fullwidth">S'inscrire</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>ChatBot 🇲🇦</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chatbot-outer {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* center vertically */
+            height: 100vh;       /* full viewport height */
+            width: 100vw;
+            padding: 0;          /* remove top padding */
+        }
+
+        .chatbot-box {
+            background: rgba(30,30,30,0.28);
+            backdrop-filter: blur(11px);
+            border-radius: 22px;
+            padding: 38px 44px 28px 44px;
+            box-shadow: 0 8px 38px 0 rgba(31,38,135,0.16);
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            justify-content: flex-end; /* Add this to align tabs to the right */
+        }
+
+        .tab-btn {
+            background: rgba(255,255,255,0.25);
+            color: #fff; font-weight: bold; border: none; border-radius: 14px 14px 0 0;
+            padding: 10px 30px; font-size: 1.05rem; cursor: pointer;
+            outline: none; transition: background 0.17s;
+        }
+        .tab-btn.active { background: #430f15; color: #fff; }
+        .tab-content { display: none; width: 100%; flex: 1; }
+        .tab-content.active { display: flex; flex-direction: column; }
+        .chat-window, .history-window {
+            height: 350px; /* fixed height */
+            background: rgba(255,255,255,0.07);
+            border-radius: 14px;
+            overflow-y: auto;
+            margin-bottom: 18px;
+            padding: 18px;
+            font-size: 1.08rem;
+            color: #fff;
+            box-shadow: 0 1px 8px 0 rgba(31,38,135,0.06);
+            white-space: pre-wrap;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        .chat-input {
+            flex: 1;
+            border-radius: 9px;
+            border: 1.3px solid #eee;
+            font-size: 1.06rem;
+            padding: 12px;
+            outline: none;
+        }
+        .chat-btn {
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(90deg, #ffba47 0%, #ff7e1b 100%);
+            color: white;
+            font-weight: 700;
+            padding: 12px 20px;
+            cursor: pointer;
+        }
+        .saved-message {
+            margin-bottom: 7px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 9px;
+            padding: 7px 10px;
+        }
+        @media (max-width: 768px) {
+            .chatbot-box {
+                padding: 24px 18px;
+                max-width: 96vw;
+            }
+        }
+        .nav-bar {
+            position: absolute;
+            top: 22px; right: 48px;
+            background: rgba(30,30,30,0.37);
+            border-radius: 18px;
+            padding: 7px 25px 7px 15px;
+            display: flex; align-items: center; gap: 15px;
+            z-index: 20;
+            box-shadow: 0 4px 15px 0 rgba(0,0,0,0.09);
+        }
+        .profile-icon {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            color: #000000;
+            font-size: 1.32rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(30,30,30,0.13);
+            text-transform: uppercase;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #000000;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+        .logout-btn:hover { color: #fff; }
+
+        .back-arrow {
+            align-self: flex-start;
+            margin-bottom: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.3rem;
+            user-select: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="MarHist" class="logo">
+    {% if user %}
+    <div class="nav-bar">
+        <span class="profile-icon">{{ user.name[0]|upper }}</span>
+        <a href="{{ url_for('main.logout') }}" class="logout-btn">Déconnexion</a>
+    </div>
+    {% endif %}
+    
+    <div class="chatbot-outer">
+        <div class="chatbot-box">
+            <a href="/" class="back-arrow">&#8592;</a>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="chat">💬 Chat</button>
+                <button class="tab-btn" data-tab="history">🕓 Historique</button>
+            </div>
+            <div id="chat" class="tab-content active">
+                <h2 style="color:#fff; font-size:1.18rem;">📜 MarHist Chatbot</h2>
+                <div class="chat-window" id="chat-window"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="chat-input" class="chat-input" placeholder="Posez votre question sur l'histoire du Maroc...">
+                    <button class="chat-btn" onclick="sendQuestion()">Envoyer</button>
+                </div>
+            </div>
+            <div id="history" class="tab-content">
+                <h2 style="color:#fff; font-size:1.18rem;">🕓 Historique</h2>
+                <div class="history-window" id="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switch
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(btn.dataset.tab).classList.add('active');
+                if (btn.dataset.tab === 'history') loadHistory();
+            };
+        });
+
+        // Chat logic with streaming support
+        const chatWindow = document.getElementById('chat-window');
+        const chatInput = document.getElementById('chat-input');
+
+        function addMsg(sender, msg) {
+            let who = sender === "Vous" ? "👤" : "🤖";
+            let color = sender === "Vous" ? "#ff9800" : "#fff";
+            const div = document.createElement('div');
+            div.className = 'saved-message';
+            div.style.color = color;
+            div.textContent = `${who} ${msg}`;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            return div;
+        }
+
+        async function sendQuestion() {
+            const question = chatInput.value.trim();
+            if (!question) return;
+            addMsg("Vous", question);
+            chatInput.value = "";
+
+            // Create a placeholder for the streaming bot response
+            const botMsgDiv = addMsg("Bot", "");
+
+            try {
+                const response = await fetch("/chat-stream", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question: question })
+                });
+                if (!response.body) throw new Error("Streaming not supported");
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let done = false;
+                let botResponse = "";
+
+                while (!done) {
+                    const { value, done: doneReading } = await reader.read();
+                    done = doneReading;
+                    if (value) {
+                        botResponse += decoder.decode(value, { stream: !done });
+                        botMsgDiv.textContent = "🤖 " + botResponse;
+                        chatWindow.scrollTop = chatWindow.scrollHeight;
+                    }
+                }
+            } catch (err) {
+                botMsgDiv.textContent = "🤖 ⚠️ Erreur serveur";
+                console.error(err);
+            }
+        }
+
+        chatInput.addEventListener("keypress", function(e){
+            if(e.key === "Enter") { sendQuestion(); }
+        });
+
+        // Load history
+        function loadHistory() {
+            fetch('/chat-history')
+            .then(res => res.json())
+            .then(history => {
+                const historyList = document.getElementById('history-list');
+                historyList.innerHTML = '';
+                if (!history.length) {
+                    historyList.innerHTML = "<div style='color:#fff'>Aucun message enregistré.</div>";
+                    return;
+                }
+                history.forEach(msg => {
+                    let who = msg.role === "user" ? "👤" : "🤖";
+                    let color = msg.role === "user" ? "#ff9800" : "#fff";
+                    historyList.innerHTML += `<div class="saved-message" style="color:${color};">${who} ${msg.text}</div>`;
+                });
+            });
+        }
+    </script>
+</body>
+</html>

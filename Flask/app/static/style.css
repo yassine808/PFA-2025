@@ -1,0 +1,200 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: url('/static/desert.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Logo */
+.logo {
+    position: absolute;
+    top: 28px;
+    left: 38px;
+    width: 82px;
+    z-index: 5;
+}
+
+/* Panels (Accueil + Auth) */
+.main-container,
+.panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(30, 30, 30, 0.25); /* foncé, bonne opacité */
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 40px 0 rgba(31, 38, 135, 0.22);
+    border-radius: 24px;
+    text-align: center;
+}
+
+.main-container {
+    padding: 40px 60px 30px 60px;
+    min-width: 360px;
+}
+
+.panel {
+    padding: 40px 38px 34px 38px;
+    min-width: 350px;
+}
+
+/* TITRES */
+.main-container h1 {
+    color: #fff;
+    font-size: 2.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(30,30,30,0.23);
+}
+.main-container .highlight {
+    color: #ff9800;
+    font-weight: bold;
+}
+.main-container p {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    text-shadow: 0 1px 7px rgba(30,30,30,0.23);
+}
+.panel h2 {
+    font-size: 2.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+/* BOUTONS */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+.btn {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 15px 26px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.17s;
+}
+.btn.orange {
+    background: linear-gradient(90deg, #ffba47 0%, #ff7e1b 100%);
+    color: white;
+}
+.btn.orange:hover {
+    background: linear-gradient(90deg, #ff9e00 0%, #f56c16 100%);
+}
+.btn.white {
+    background: #fff;
+    color: #444;
+    border: 2px solid #fff;
+}
+.btn.white:hover {
+    background: #fafafa;
+    border-color: #ff9800;
+    color: #ff9800;
+}
+.fullwidth {
+    width: 100%;
+    margin-top: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* Formulaires */
+.panel form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 8px;
+}
+.panel input,
+.panel select {
+    font-size: 1rem;
+    padding: 12px 15px;
+    border-radius: 9px;
+    border: 1px solid #ddd;
+    outline: none;
+    background: #f5f5f5;
+    margin-bottom: 5px;
+    transition: border 0.15s;
+}
+.panel input:focus,
+.panel select:focus {
+    border: 1.5px solid #ff9800;
+}
+
+/* FLECHE DE RETOUR */
+.back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-size: 2rem;
+    text-decoration: none;
+    color: #ff9800;
+    font-weight: bold;
+    transition: color 0.15s;
+}
+.back-arrow:hover {
+    color: #333;
+}
+
+/* Barre profil (si homepage/profil) */
+.profile-bar {
+    position: absolute;
+    top: 24px;
+    right: 44px;
+    background: rgba(30,30,30,0.13);
+    border-radius: 14px;
+    padding: 8px 22px;
+    color: #fff;
+    font-weight: 600;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    z-index: 20;
+}
+.profile-name {
+    font-size: 1.16rem;
+}
+.profile-username {
+    font-size: 0.95rem;
+    color: #ffd98c;
+}
+.logout-btn {
+    color: #ff9800;
+    margin-left: 18px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.logout-btn:hover {
+    color: #fff;
+}
+
+/* Flashes d’erreur */
+.flash.danger {
+    color: #fff;
+    background: #e44747;
+    border-radius: 8px;
+    padding: 7px 0;
+    margin-bottom: 14px;
+}
+
+@media (max-width: 600px) {
+    .main-container, .panel, .chatbot-container {
+        min-width: 90vw !important;
+        padding: 20px 5vw;
+    }
+    .logo {
+        width: 62px;
+        top: 15px;
+        left: 14px;
+    }
+}

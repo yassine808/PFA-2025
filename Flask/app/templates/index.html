@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil | MarHist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="MarHist" class="logo">
+    <div class="main-container">
+        <h1><span>Bienvenue sur <span class="highlight">MarHist</span></span></h1>
+        <p>Explorez l'histoire du Maroc à travers notre Chatbot IA</p>
+        <div class="btn-group">
+            <a href="/signup" class="btn orange">Créer un compte</a>
+            <a href="/login" class="btn white">Se connecter</a>
+        </div>
+    </div>
+</body>
+</html>
